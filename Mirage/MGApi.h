@@ -17,15 +17,25 @@
 -(id)init:(NSString*)apiKey;
 
 -(void)createPatternWithName:(NSString*)name
-         description:(NSString*)description
-                path:(NSString*)imagePath;
+                 description:(NSString*)description
+                        path:(NSString*)imagePath
+                     success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+                     failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure
+                    progress:(void(^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress;
 
 -(void)editPatternWithId:(NSString*)idPattern
-              name:(NSString*)name
-       description:(NSString*)description;
+                    name:(NSString*)name
+             description:(NSString*)description
+                 success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+                 failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure;
 
--(void) deletePatternWithId:(NSString*)idPattern;
+-(void) deletePatternWithId:(NSString*)idPattern
+                    success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+                    failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure;
 
--(void)doMatch:(NSString*)pathImage;
+-(void)doMatch:(NSString*)pathImage
+       success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+       failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure
+      progress:(void(^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress;
 
 @end

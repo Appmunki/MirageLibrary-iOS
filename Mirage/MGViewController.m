@@ -23,13 +23,33 @@
     
     MGApi *mirage = [[MGApi alloc] init:@"gy7c9vN3sRbNF5MqpsepGH0xlRMwTSJ9Jmrx5cKY"];
     
-    [mirage createPatternWithName:@"library ios test" description:@"description" path:imageFilepath];
+    [mirage createPatternWithName:@"library ios test" description:@"description" path:imageFilepath success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"Success %@",JSON);
+    }  failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"Failure %@",JSON);
+    } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+         NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
+    }];
     
-    [mirage deletePatternWithId:@"24"];
+    [mirage deletePatternWithId:@"24" success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"Success %@",JSON);
+    }  failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"Failure %@",JSON);
+    }];
     
-    [mirage editPatternWithId:@"23" name:@"library ios test" description:@"description"];
+    [mirage editPatternWithId:@"23" name:@"library ios test" description:@"description" success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"Success %@",JSON);
+    }  failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"Failure %@",JSON);
+    }];
     
-    [mirage doMatch:imageFilepath];
+    [mirage doMatch:imageFilepath success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"Success %@",JSON);
+    }  failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"Failure %@",JSON);
+    } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
+    }];
     
 }
 

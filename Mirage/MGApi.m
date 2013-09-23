@@ -21,8 +21,11 @@
 
 
 -(void)createPatternWithName:(NSString*)name
-         description:(NSString*)description
-                path:(NSString*)imagePath{
+                 description:(NSString*)description
+                        path:(NSString*)imagePath
+                     success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+                     failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure
+                    progress:(void(^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress{
     
     
     
@@ -53,27 +56,12 @@
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation
                                          JSONRequestOperationWithRequest:request
-                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
-                                             NSLog(@"JSON %@",JSON);
-                                             
-                                             NSLog(@"RESPONSE %@",response);
-                                         }
-                                         
-                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                             
-                                             NSLog(@"Error RESPONSE: %@",response);
-                                             
-                                             NSLog(@"Error JSON: %@",JSON);
-                                             
-                                             NSLog(@"Error: %@",error.localizedDescription);
-                                         }];
+                                         success:success
+                                         failure:failure];
     
     
     
-    
-    [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
-    }];
+    [operation setUploadProgressBlock:progress];
     
     [httpClient enqueueHTTPRequestOperation:operation];
 }
@@ -82,8 +70,10 @@
 
 
 -(void)editPatternWithId:(NSString*)idPattern
-              name:(NSString*)name
-       description:(NSString*)description{
+                    name:(NSString*)name
+             description:(NSString*)description
+                 success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+                 failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure{
     
     NSURL *url = [[NSURL alloc] initWithString:@"http://192.168.0.13:3000/"];
     AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:url];
@@ -101,14 +91,8 @@
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation
                                          JSONRequestOperationWithRequest:request
-                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                             NSLog(@"response: %@",response);
-                                             NSLog(@"JSON: %@",JSON);
-                                         }
-                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                             NSLog(@"NSError: %@",error.localizedDescription);
-                                             NSLog(@"NSError: %@",response);
-                                         }];
+                                         success:success
+                                         failure:failure];
     
     
     [operation start];
@@ -118,32 +102,31 @@
 
 
 
--(void) deletePatternWithId:(NSString*)idPattern{
+-(void) deletePatternWithId:(NSString*)idPattern
+                    success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+                    failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure{
     
     NSURL *url = [[NSURL alloc] initWithString:@"http://192.168.0.13:3000/"];
     AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:url];
-        
+    
     NSString *servicePath = [NSString stringWithFormat:@"patterns/%@",idPattern];
     
     NSURLRequest *request = [client requestWithMethod:@"DELETE" path:servicePath parameters:nil];
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation
                                          JSONRequestOperationWithRequest:request
-                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                             NSLog(@"response: %@",response);
-                                             NSLog(@"JSON: %@",JSON);
-                                         }
-                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                             NSLog(@"NSError: %@",error.localizedDescription);
-                                             NSLog(@"NSError: %@",response);
-                                         }];
+                                         success:success
+                                         failure:failure];
     
     
     [operation start];
 }
 
 
--(void)doMatch:(NSString*)pathImage{
+-(void)doMatch:(NSString*)pathImage
+       success:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
+       failure:(void(^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure
+      progress:(void(^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress{
     
     UIImage *img = [[UIImage alloc] initWithContentsOfFile:pathImage];
     
@@ -159,18 +142,11 @@
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation
                                          JSONRequestOperationWithRequest:request
-                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
-                                             NSLog(@"SUCCESS %@",JSON);
-                                         }
-                                         
-                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                             NSLog(@"NSError: %@",error.localizedDescription);
-                                         }];
+                                         success:success
+                                         failure:failure];
     
-    [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
-    }];
-
+    [operation setUploadProgressBlock:progress];
+    
     
     [httpClient enqueueHTTPRequestOperation:operation];
 }
