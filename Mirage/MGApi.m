@@ -153,5 +153,32 @@
 
 
 
+-(void) test{
+    
+    NSURL *url = [[NSURL alloc] initWithString:@"http://lg.appsolution.co/"];
+    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:url];
+    
+    
+    
+    NSURLRequest *request = [client requestWithMethod:@"DELETE" path:@"loginUser.php" parameters:nil];
+    
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation
+                                         JSONRequestOperationWithRequest:request
+                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                             NSLog(@"Success %@",JSON);
+                                         }
+                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                             NSLog(@"Failure %@",request);
+                                             NSLog(@"Failure %@",response);
+                                             NSLog(@"Failure %@",error);
+                                             NSLog(@"Failure %@",JSON);
+                                         }];
+    
+    
+    [operation start];
+}
+
+
+
 
 @end
